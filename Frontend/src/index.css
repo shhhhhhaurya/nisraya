@@ -1,0 +1,384 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   NISRAYA — global base
+   Tailwind is the styling system for this project. Anything here is either a
+   reset, a token that Tailwind cannot express, or a small reusable primitive.
+   ========================================================================== */
+
+@layer base {
+  :root {
+    color-scheme: light;
+    --nav-h: 5.5rem;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* Keep the fixed navbar from covering anchored sections */
+    scroll-padding-top: var(--nav-h);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+    /* Prevents any stray element from creating a horizontal scrollbar */
+    overflow-x: hidden;
+    background-color: theme("colors.ivory");
+    color: theme("colors.espresso.700");
+    font-family: theme("fontFamily.sans");
+    font-weight: 300;
+    font-size: 0.9375rem;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: theme("fontFamily.display");
+    font-weight: 300;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+
+  /* Editorial serif reads better with slightly tighter, lighter italics */
+  em,
+  i {
+    font-style: italic;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+    color: inherit;
+  }
+
+  button {
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+
+  button,
+  a {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  ::selection {
+    background: theme("colors.champagne.DEFAULT");
+    color: theme("colors.ivory");
+  }
+
+  /* Visible, on-brand keyboard focus. Never removed for aesthetics. */
+  :focus-visible {
+    outline: 1px solid theme("colors.champagne.DEFAULT");
+    outline-offset: 3px;
+  }
+
+  /* A restrained, brand-coloured scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: theme("colors.cream");
+  }
+  ::-webkit-scrollbar-thumb {
+    background: theme("colors.espresso.200");
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: theme("colors.espresso.400");
+  }
+}
+
+@layer components {
+  /* ---------- Layout ---------- */
+  .shell {
+    width: 100%;
+    max-width: theme("maxWidth.8xl");
+    margin-inline: auto;
+    padding-inline: theme("spacing.gutter");
+  }
+
+  /* ---------- Small uppercase label used throughout the site ---------- */
+  .eyebrow {
+    font-size: 0.6875rem;
+    font-weight: 400;
+    letter-spacing: theme("letterSpacing.label");
+    text-transform: uppercase;
+    color: theme("colors.champagne.dark");
+  }
+
+  .eyebrow-light {
+    color: theme("colors.champagne.light");
+  }
+
+  /* ---------- Buttons ---------- */
+  /* Solid champagne — reserved for the single primary action on a view */
+  .btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    min-height: 3rem;
+    padding: 0.875rem 2.25rem;
+    font-size: 0.6875rem;
+    font-weight: 400;
+    letter-spacing: theme("letterSpacing.label");
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: all 600ms theme("transitionTimingFunction.editorial");
+  }
+
+  .btn-gold {
+    background-color: theme("colors.champagne.DEFAULT");
+    color: theme("colors.espresso.800");
+  }
+  .btn-gold:hover {
+    background-color: theme("colors.espresso.700");
+    color: theme("colors.ivory");
+  }
+
+  .btn-dark {
+    background-color: theme("colors.espresso.700");
+    color: theme("colors.ivory");
+  }
+  .btn-dark:hover {
+    background-color: theme("colors.champagne.DEFAULT");
+    color: theme("colors.espresso.800");
+  }
+
+  .btn-outline {
+    border: 1px solid theme("colors.espresso.200");
+    color: theme("colors.espresso.700");
+    background-color: transparent;
+  }
+  .btn-outline:hover {
+    border-color: theme("colors.espresso.700");
+    background-color: theme("colors.espresso.700");
+    color: theme("colors.ivory");
+  }
+
+  .btn-outline-light {
+    border: 1px solid rgb(251 246 239 / 0.45);
+    color: theme("colors.ivory");
+    background-color: transparent;
+  }
+  .btn-outline-light:hover {
+    border-color: theme("colors.ivory");
+    background-color: theme("colors.ivory");
+    color: theme("colors.espresso.800");
+  }
+
+  .btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  /* ---------- Text link with an underline that draws in on hover ---------- */
+  .link-draw {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    font-size: 0.6875rem;
+    letter-spacing: theme("letterSpacing.label");
+    text-transform: uppercase;
+    padding-bottom: 0.375rem;
+  }
+  .link-draw::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+    background-color: currentColor;
+    opacity: 0.35;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 600ms theme("transitionTimingFunction.editorial"),
+      opacity 600ms ease;
+  }
+  .link-draw:hover::after {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+
+  /* Persistent hairline that thickens on hover — used in footers/menus */
+  .link-quiet {
+    position: relative;
+    transition: color 400ms ease;
+  }
+  .link-quiet::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    width: 100%;
+    height: 1px;
+    background-color: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 500ms theme("transitionTimingFunction.editorial");
+  }
+  .link-quiet:hover::after {
+    transform: scaleX(1);
+  }
+
+  /* ---------- Forms ---------- */
+  .field {
+    width: 100%;
+    background-color: transparent;
+    border: 0;
+    border-bottom: 1px solid theme("colors.espresso.200");
+    padding: 0.75rem 0;
+    font-size: 0.9375rem;
+    font-weight: 300;
+    color: theme("colors.espresso.700");
+    transition: border-color 500ms ease;
+  }
+  .field::placeholder {
+    color: theme("colors.taupe");
+  }
+  .field:focus {
+    outline: none;
+    border-bottom-color: theme("colors.champagne.DEFAULT");
+  }
+  .field-error {
+    border-bottom-color: theme("colors.wine");
+  }
+
+  .field-label {
+    display: block;
+    font-size: 0.6875rem;
+    letter-spacing: theme("letterSpacing.label");
+    text-transform: uppercase;
+    color: theme("colors.espresso.500");
+    margin-bottom: 0.25rem;
+  }
+
+  /* ---------- Hairline rules ---------- */
+  .hairline {
+    height: 1px;
+    background-color: theme("colors.espresso.100");
+    border: 0;
+  }
+  .hairline-light {
+    height: 1px;
+    background-color: rgb(251 246 239 / 0.18);
+    border: 0;
+  }
+}
+
+@layer utilities {
+  /* Scroll-reveal: the base state is applied by ScrollReveal.jsx and released
+     when the element intersects the viewport. */
+  .reveal-hidden {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  .reveal-shown {
+    opacity: 1;
+    transform: none;
+  }
+  .reveal-base {
+    transition-property: opacity, transform;
+    transition-duration: 1200ms;
+    transition-timing-function: cubic-bezier(0.16, 0.84, 0.24, 1);
+    will-change: opacity, transform;
+  }
+
+  /* Masks a line of display type so it can rise into view */
+  .line-mask {
+    display: block;
+    overflow: hidden;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  /* Hides scrollbars on horizontal editorial rails */
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Slightly shorter bar on small screens — declared here rather than in the
+   base layer so the media query sits next to the value it overrides. */
+@media (max-width: 640px) {
+  :root {
+    --nav-h: 4.5rem;
+  }
+}
+
+/* Hero slide timer. Written by hand because it is driven by a JS duration
+   (--hero-ms) rather than a Tailwind utility. */
+@keyframes hero-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.hero-progress {
+  transform-origin: left;
+  animation: hero-progress var(--hero-ms, 6500ms) linear forwards;
+}
+
+/* Respect the operating-system reduced-motion preference everywhere. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .reveal-hidden {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* The timer bar would otherwise snap to full instantly and read as an error */
+  .hero-progress {
+    animation: none;
+    transform: scaleX(1);
+  }
+}
