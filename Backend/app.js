@@ -7,25 +7,26 @@ const cookieParser = require("cookie-parser");
 const authRoutes = require("./src/routes/authRoutes");
 const accountRoutes = require("./src/routes/accountRoutes");
 const stockRoutes = require("./src/routes/stockRoutes");
-
 const passport = require("./src/config/passport");
 
 const app = express();
 
 /* -------------------------------------------------------------------------- */
-/* Middleware                                                                 */
+/* Middleware                                                                */
 /* -------------------------------------------------------------------------- */
 
 const FRONTEND_URL = (
   process.env.FRONTEND_URL ||
   "https://shhhhhhaurya.github.io/nisraya"
-).replace(/\/$/, "");
+).replace(/\/+$/, "");
 
 const FRONTEND_ORIGIN = new URL(FRONTEND_URL).origin;
 
 const allowedOrigins = new Set([
   FRONTEND_ORIGIN,
+  "https://shhhhhhaurya.github.io",
   "http://localhost:5173",
+  "http://localhost:5174",
 ]);
 
 app.use(
@@ -37,7 +38,8 @@ app.use(
         return;
       }
 
-      callback(new Error("CORS origin not allowed"));
+      console.error("Blocked CORS origin:", origin);
+      callback(new Error(`CORS origin not allowed: ${origin}`));
     },
     credentials: true,
   }),
@@ -47,11 +49,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(morgan("dev"));
-
 app.use(passport.initialize());
 
 /* -------------------------------------------------------------------------- */
-/* Health check                                                               */
+/* Health check                                                              */
 /* -------------------------------------------------------------------------- */
 
 app.get("/api/health", (req, res) => {
@@ -62,7 +63,7 @@ app.get("/api/health", (req, res) => {
 });
 
 /* -------------------------------------------------------------------------- */
-/* Routes                                                                     */
+/* Routes                                                                    */
 /* -------------------------------------------------------------------------- */
 
 app.use("/api/auth", authRoutes);
@@ -78,10 +79,11 @@ app.use("/api/account", accountRoutes);
  * PUT  /api/stock/:productId
  *      Only authenticated admins can change stock.
  */
+
 app.use("/api/stock", stockRoutes);
 
 /* -------------------------------------------------------------------------- */
-/* Export app                                                                 */
+/* Export app                                                                */
 /* -------------------------------------------------------------------------- */
 
 module.exports = app;
